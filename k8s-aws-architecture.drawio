@@ -1,0 +1,166 @@
+<mxfile host="app.diagrams.net" modified="2026-02-08T00:00:00.000Z" agent="Copilot" version="1.0" type="device">
+  <diagram id="k8s-aws-arch" name="Page-1">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- AWS Cloud Container -->
+        <mxCell id="aws-cloud" value="AWS Cloud" style="fillColor=#FF9900;strokeColor=#FF9900;html=1;rounded=1;fontSize=16;fontStyle=bold;opacity=0.2" vertex="1" parent="1">
+          <mxGeometry x="50" y="50" width="1300" height="800" as="geometry"/>
+        </mxCell>
+        
+        <!-- VPC Container -->
+        <mxCell id="vpc" value="VPC (10.0.0.0/16)" style="fillColor=#4A90E2;strokeColor=#2E5C8A;html=1;rounded=1;fontSize=13;fontStyle=bold;opacity=0.15" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="1200" height="650" as="geometry"/>
+        </mxCell>
+        
+        <!-- Subnet Container -->
+        <mxCell id="subnet" value="Subnet (10.0.0.0/24) - us-east-1a" style="fillColor=#7ED321;strokeColor=#2E7D32;html=1;rounded=1;fontSize=12;fontStyle=bold;opacity=0.15" vertex="1" parent="1">
+          <mxGeometry x="150" y="150" width="700" height="450" as="geometry"/>
+        </mxCell>
+        
+        <!-- Control Plane Node -->
+        <mxCell id="cp-node" value="Control Plane Node&#10;t3.medium&#10;Ubuntu 22.04 LTS" style="fillColor=#2E5C8A;strokeColor=#000;html=1;rounded=1;fontSize=11;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="180" y="180" width="140" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- Worker Node -->
+        <mxCell id="worker-node" value="Worker Node&#10;t3.medium&#10;Ubuntu 22.04 LTS" style="fillColor=#2E5C8A;strokeColor=#000;html=1;rounded=1;fontSize=11;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="400" y="180" width="140" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- Security Group -->
+        <mxCell id="sg" value="Security Group&#10;SSH: 0.0.0.0/0&#10;Internal: All&#10;NodePort: 30000-32767" style="fillColor=#E8A93F;strokeColor=#D68910;html=1;rounded=1;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="620" y="180" width="200" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- Internet Gateway -->
+        <mxCell id="igw" value="Internet Gateway" style="fillColor=#FF6B6B;strokeColor=#C92A2A;html=1;rounded=1;fontSize=11;fontStyle=bold" vertex="1" parent="1">
+          <mxGeometry x="900" y="200" width="120" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- Route Table -->
+        <mxCell id="rt" value="Route Table&#10;0.0.0.0/0 → IGW" style="fillColor=#FF6B6B;strokeColor=#C92A2A;html=1;rounded=1;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="900" y="300" width="120" height="60" as="geometry"/>
+        </mxCell>
+        
+        <!-- Kubernetes Control Plane Components Container -->
+        <mxCell id="k8s-cp" value="Kubernetes Control Plane" style="fillColor=#4A90E2;strokeColor=#2E5C8A;html=1;rounded=1;fontSize=12;fontStyle=bold;opacity=0.2" vertex="1" parent="1">
+          <mxGeometry x="100" y="700" width="400" height="130" as="geometry"/>
+        </mxCell>
+        
+        <!-- API Server -->
+        <mxCell id="apiserver" value="API Server" style="fillColor=#4A90E2;strokeColor=#000;html=1;rounded=1;fontSize=10;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="120" y="715" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Scheduler -->
+        <mxCell id="scheduler" value="Scheduler" style="fillColor=#4A90E2;strokeColor=#000;html=1;rounded=1;fontSize=10;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="230" y="715" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Controller Manager -->
+        <mxCell id="cm" value="Controller&#10;Manager" style="fillColor=#4A90E2;strokeColor=#000;html=1;rounded=1;fontSize=10;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="340" y="715" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- etcd -->
+        <mxCell id="etcd" value="etcd" style="fillColor=#4A90E2;strokeColor=#000;html=1;rounded=1;fontSize=10;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="450" y="715" width="40" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Kubernetes Worker Container -->
+        <mxCell id="k8s-worker" value="Kubernetes Worker" style="fillColor=#7ED321;strokeColor=#2E7D32;html=1;rounded=1;fontSize=12;fontStyle=bold;opacity=0.2" vertex="1" parent="1">
+          <mxGeometry x="600" y="700" width="250" height="130" as="geometry"/>
+        </mxCell>
+        
+        <!-- kubelet -->
+        <mxCell id="kubelet" value="kubelet" style="fillColor=#7ED321;strokeColor=#000;html=1;rounded=1;fontSize=10;fontColor=#000" vertex="1" parent="1">
+          <mxGeometry x="620" y="715" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Container Runtime -->
+        <mxCell id="runtime" value="containerd" style="fillColor=#7ED321;strokeColor=#000;html=1;rounded=1;fontSize=10;fontColor=#000" vertex="1" parent="1">
+          <mxGeometry x="730" y="715" width="90" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Pod Network -->
+        <mxCell id="pod-net" value="Flannel CNI&#10;10.244.0.0/16" style="fillColor=#FFD93D;strokeColor=#F0AD4E;html=1;rounded=1;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="900" y="715" width="100" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Example Workload Container -->
+        <mxCell id="workload" value="Example Workload" style="fillColor=#A569BD;strokeColor=#6C3B8C;html=1;rounded=1;fontSize=11;fontStyle=bold;opacity=0.2" vertex="1" parent="1">
+          <mxGeometry x="1050" y="700" width="200" height="130" as="geometry"/>
+        </mxCell>
+        
+        <!-- Nginx Pod -->
+        <mxCell id="nginx" value="Nginx Pod" style="fillColor:#A569BD;strokeColor=#000;html=1;rounded=1;fontSize=10;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="1070" y="715" width="80" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- NodePort Service -->
+        <mxCell id="service" value="NodePort Service&#10;Port 80" style="fillColor=#A569BD;strokeColor=#000;html=1;rounded=1;fontSize=9;fontColor=#FFF" vertex="1" parent="1">
+          <mxGeometry x="1170" y="715" width="70" height="50" as="geometry"/>
+        </mxCell>
+        
+        <!-- Connections -->
+        <!-- Control Plane to Components -->
+        <mxCell id="cp-to-api" edge="1" parent="1" source="cp-node" target="apiserver">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- API Server to Scheduler -->
+        <mxCell id="api-sched" edge="1" parent="1" source="apiserver" target="scheduler">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- API Server to Controller Manager -->
+        <mxCell id="api-cm" edge="1" parent="1" source="apiserver" target="cm">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- API Server to etcd -->
+        <mxCell id="api-etcd" edge="1" parent="1" source="apiserver" target="etcd">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Worker Node to kubelet -->
+        <mxCell id="worker-kubelet" edge="1" parent="1" source="worker-node" target="kubelet">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- kubelet to Container Runtime -->
+        <mxCell id="kubelet-runtime" edge="1" parent="1" source="kubelet" target="runtime">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Control Plane to Worker Communication -->
+        <mxCell id="cp-worker-comm" edge="1" parent="1" source="apiserver" target="kubelet" style="dashed=1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Pod Network to Nginx -->
+        <mxCell id="podnet-nginx" edge="1" parent="1" source="pod-net" target="nginx">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Nginx to Service -->
+        <mxCell id="nginx-svc" edge="1" parent="1" source="nginx" target="service">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- IGW to VPC -->
+        <mxCell id="igw-vpc" edge="1" parent="1" source="igw" target="vpc" style="exitX=0;exitY=0.5;exitDx=0;exitDy=0">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- RT to IGW -->
+        <mxCell id="rt-igw" edge="1" parent="1" source="rt" target="igw">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
