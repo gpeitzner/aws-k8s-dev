@@ -4,6 +4,10 @@ Ever wondered how Kubernetes clusters actually work under the hood? In this guid
 
 Whether you're preparing for a certification, building your homelab, or just curious about container orchestration, this step-by-step tutorial has got you covered!
 
+## Architecture Diagram
+
+![AWS Kubernetes architecture diagram](aws-k8s-architecture.drawio.png)
+
 ## What You'll Need
 
 Don't worry—the setup is straightforward! Here's what you'll need before we begin:
