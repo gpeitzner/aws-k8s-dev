@@ -1,0 +1,167 @@
+<svg viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
+  <!-- Define styles -->
+  <defs>
+    <style>
+      .cloud-bg { fill: #FF9900; opacity: 0.1; stroke: #FF9900; stroke-width: 2; }
+      .vpc-bg { fill: #4A90E2; opacity: 0.1; stroke: #4A90E2; stroke-width: 2; }
+      .subnet-bg { fill: #7ED321; opacity: 0.1; stroke: #7ED321; stroke-width: 2; }
+      .node { fill: #2E5C8A; stroke: #000; stroke-width: 2; }
+      .node-text { fill: white; font-size: 11px; text-anchor: middle; dominantBaseline: middle; }
+      .component { fill: #4A90E2; stroke: #000; stroke-width: 1.5; }
+      .component-text { fill: white; font-size: 10px; text-anchor: middle; dominantBaseline: middle; font-weight: bold; }
+      .worker-comp { fill: #7ED321; stroke: #000; stroke-width: 1.5; }
+      .worker-text { fill: black; font-size: 10px; text-anchor: middle; dominantBaseline: middle; font-weight: bold; }
+      .pod { fill: #A569BD; stroke: #000; stroke-width: 1.5; }
+      .pod-text { fill: white; font-size: 10px; text-anchor: middle; dominantBaseline: middle; }
+      .network { fill: #FFD93D; stroke: #F0AD4E; stroke-width: 1.5; }
+      .network-text { fill: #333; font-size: 10px; text-anchor: middle; dominantBaseline: middle; font-weight: bold; }
+      .sg { fill: #E8A93F; stroke: #D68910; stroke-width: 1.5; }
+      .sg-text { fill: #333; font-size: 9px; text-anchor: middle; dominantBaseline: middle; }
+      .gateway { fill: #FF6B6B; stroke: #C92A2A; stroke-width: 1.5; }
+      .gateway-text { fill: white; font-size: 10px; text-anchor: middle; dominantBaseline: middle; font-weight: bold; }
+      .label { fill: #333; font-size: 13px; font-weight: bold; font-family: Arial, sans-serif; }
+      .small-label { fill: #333; font-size: 11px; font-family: Arial, sans-serif; }
+      .line { stroke: #333; stroke-width: 2; fill: none; }
+      .dashed-line { stroke: #666; stroke-width: 2; fill: none; stroke-dasharray: 5,5; }
+      .arrow { fill: #333; }
+    </style>
+  </defs>
+
+  <!-- AWS Cloud Background -->
+  <rect class="cloud-bg" x="50" y="50" width="1300" height="800" rx="10"/>
+  <text class="label" x="60" y="75">AWS Cloud</text>
+
+  <!-- VPC Background -->
+  <rect class="vpc-bg" x="100" y="100" width="1200" height="650" rx="10"/>
+  <text class="label" x="110" y="125">VPC (10.0.0.0/16)</text>
+
+  <!-- Subnet Background -->
+  <rect class="subnet-bg" x="150" y="150" width="700" height="450" rx="10"/>
+  <text class="label" x="160" y="175">Subnet (10.0.0.0/24) - us-east-1a</text>
+
+  <!-- Control Plane Node -->
+  <rect class="node" x="180" y="200" width="140" height="100" rx="5"/>
+  <text class="node-text" x="250" y="235">Control Plane</text>
+  <text class="node-text" x="250" y="255">t3.medium</text>
+  <text class="node-text" x="250" y="275">Ubuntu 22.04</text>
+
+  <!-- Worker Node -->
+  <rect class="node" x="380" y="200" width="140" height="100" rx="5"/>
+  <text class="node-text" x="450" y="235">Worker Node</text>
+  <text class="node-text" x="450" y="255">t3.medium</text>
+  <text class="node-text" x="450" y="275">Ubuntu 22.04</text>
+
+  <!-- Security Group -->
+  <rect class="sg" x="600" y="200" width="200" height="100" rx="5"/>
+  <text class="sg-text" x="700" y="225">Security Group</text>
+  <text class="sg-text" x="700" y="242">SSH: 0.0.0.0/0</text>
+  <text class="sg-text" x="700" y="259">Internal: All</text>
+  <text class="sg-text" x="700" y="276">NodePort: 30000-32767</text>
+
+  <!-- Internet Gateway -->
+  <rect class="gateway" x="880" y="200" width="120" height="60" rx="5"/>
+  <text class="gateway-text" x="940" y="235">Internet Gateway</text>
+
+  <!-- Route Table -->
+  <rect class="gateway" x="880" y="300" width="120" height="60" rx="5"/>
+  <text class="gateway-text" x="940" y="330">Route Table</text>
+  <text class="small-label" x="940" y="350" text-anchor="middle">0.0.0.0/0 → IGW</text>
+
+  <!-- Kubernetes Control Plane Section -->
+  <text class="label" x="110" y="450">Kubernetes Control Plane Components</text>
+  
+  <!-- API Server -->
+  <rect class="component" x="120" y="480" width="90" height="50" rx="5"/>
+  <text class="component-text" x="165" y="510">API Server</text>
+
+  <!-- Scheduler -->
+  <rect class="component" x="230" y="480" width="90" height="50" rx="5"/>
+  <text class="component-text" x="275" y="510">Scheduler</text>
+
+  <!-- Controller Manager -->
+  <rect class="component" x="340" y="480" width="90" height="50" rx="5"/>
+  <text class="component-text" x="385" y="510">Controller</text>
+  <text class="component-text" x="385" y="525">Manager</text>
+
+  <!-- etcd -->
+  <rect class="component" x="450" y="480" width="80" height="50" rx="5"/>
+  <text class="component-text" x="490" y="510">etcd</text>
+
+  <!-- Kubernetes Worker Section -->
+  <text class="label" x="600" y="450">Kubernetes Worker Components</text>
+
+  <!-- kubelet -->
+  <rect class="worker-comp" x="620" y="480" width="90" height="50" rx="5"/>
+  <text class="worker-text" x="665" y="510">kubelet</text>
+
+  <!-- Container Runtime -->
+  <rect class="worker-comp" x="730" y="480" width="90" height="50" rx="5"/>
+  <text class="worker-text" x="775" y="510">containerd</text>
+
+  <!-- Flannel CNI -->
+  <rect class="network" x="880" y="480" width="100" height="50" rx="5"/>
+  <text class="network-text" x="930" y="495">Flannel CNI</text>
+  <text class="network-text" x="930" y="515">10.244.0.0/16</text>
+
+  <!-- Example Workload Section -->
+  <text class="label" x="1050" y="450">Example Workload</text>
+
+  <!-- Nginx Pod -->
+  <rect class="pod" x="1070" y="480" width="80" height="50" rx="5"/>
+  <text class="pod-text" x="1110" y="510">Nginx Pod</text>
+
+  <!-- NodePort Service -->
+  <rect class="pod" x="1170" y="480" width="70" height="50" rx="5"/>
+  <text class="pod-text" x="1205" y="500">NodePort</text>
+  <text class="pod-text" x="1205" y="515">Service</text>
+
+  <!-- Connections -->
+  <!-- Control Plane Node to API Server -->
+  <line class="line" x1="250" y1="300" x2="165" y2="480"/>
+  <polygon class="arrow" points="165,480 160,470 170,472"/>
+
+  <!-- API Server to Scheduler -->
+  <line class="line" x1="210" y1="505" x2="230" y2="505"/>
+  <polygon class="arrow" points="230,505 238,505 233,510"/>
+
+  <!-- API Server to Controller Manager -->
+  <line class="line" x1="210" y1="505" x2="340" y2="505"/>
+  <polygon class="arrow" points="340,505 348,505 343,510"/>
+
+  <!-- API Server to etcd -->
+  <line class="line" x1="210" y1="505" x2="450" y2="505"/>
+  <polygon class="arrow" points="450,505 458,505 453,510"/>
+
+  <!-- Worker Node to kubelet -->
+  <line class="line" x1="450" y1="300" x2="665" y2="480"/>
+  <polygon class="arrow" points="665,480 660,470 670,472"/>
+
+  <!-- kubelet to Container Runtime -->
+  <line class="line" x1="710" y1="505" x2="730" y2="505"/>
+  <polygon class="arrow" points="730,505 738,505 733,510"/>
+
+  <!-- POD Network to Nginx -->
+  <line class="line" x1="980" y1="505" x2="1070" y2="505"/>
+  <polygon class="arrow" points="1070,505 1078,505 1073,510"/>
+
+  <!-- Nginx to Service -->
+  <line class="line" x1="1150" y1="505" x2="1170" y2="505"/>
+  <polygon class="arrow" points="1170,505 1178,505 1173,510"/>
+
+  <!-- Control Plane to Worker (dashed) -->
+  <line class="dashed-line" x1="320" y1="250" x2="380" y2="250"/>
+  <text class="small-label" x="350" y="245" text-anchor="middle">Cluster Communication</text>
+
+  <!-- IGW to VPC Connection -->
+  <line class="line" x1="880" y1="230" x2="850" y2="230"/>
+  <polygon class="arrow" points="850,230 842,230 847,225"/>
+
+  <!-- Legend -->
+  <text class="label" x="110" y="630">Key Technologies:</text>
+  <text class="small-label" x="110" y="655">• kubeadm: Cluster initialization</text>
+  <text class="small-label" x="110" y="675">• kubelet: Node agent</text>
+  <text class="small-label" x="110" y="695">• containerd: Container runtime</text>
+  <text class="small-label" x="600" y="655">• Flannel: Pod networking (CNI)</text>
+  <text class="small-label" x="600" y="675">• EC2 Instance Connect: SSH access</text>
+  <text class="small-label" x="600" y="695">• Security Groups: Network isolation</text>
+</svg>
