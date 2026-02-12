@@ -28,7 +28,9 @@ Don't worry—the setup is straightforward! Here's what you'll need before we be
 
 Ready to get your hands dirty? We'll build this cluster step by step, starting with the infrastructure and working our way up to a fully functioning cluster. I'll explain what each command does and why it matters.
 
-### 1. Setting Up Your AWS Environment
+## 1. Get Your AWS CLI Ready
+
+**Run on:** Your local machine
 
 Configure the AWS CLI with your credentials and choose the region you will use for all resources in this guide.
 
@@ -39,7 +41,9 @@ aws ec2 describe-regions
 
 Pick a region from the output and use it consistently for the rest of the guide.
 
-### 2. Configuring Network Infrastructure
+## 2. Build Your Cloud Network Foundation
+
+**Run on:** Your local machine
 
 Create a dedicated VPC and public subnet, then attach an internet gateway and add a default route so instances can reach the internet. Update the availability zone if you chose a different region.
 
@@ -79,7 +83,9 @@ aws ec2 create-route \
   --gateway-id $IGW_ID
 ```
 
-### 3. Securing Your Cluster with Security Groups
+## 3. Lock Down Your Cluster Security
+
+**Run on:** Your local machine
 
 Create a security group for the cluster that allows SSH access and unrestricted node-to-node traffic. The example uses 0.0.0.0/0 for SSH; restrict it to your IP if you want tighter security.
 
@@ -103,7 +109,9 @@ aws ec2 authorize-security-group-ingress \
   --source-group $SG_ID
 ```
 
-### 4. Provisioning the Control Plane Node
+## 4. Spin Up Your Control Plane Instance
+
+**Run on:** Your local machine
 
 Launch a t3.medium Ubuntu 22.04 LTS instance for the control plane, wait for it to be running, and capture its public IP for SSH access.
 
@@ -128,7 +136,9 @@ CONTROL_PLANE_IP=$(aws ec2 describe-instances \
 echo "Control plane instance ready: $CONTROL_PLANE_IP"
 ```
 
-### 5. Connecting to the Control Plane
+## 5. Jump Into the Control Plane
+
+**Run on:** Your local machine
 
 Connect to the control plane using EC2 Instance Connect, which handles authentication with your existing SSH key.
 
@@ -147,17 +157,15 @@ aws ec2-instance-connect send-ssh-public-key \
 ssh ubuntu@$CONTROL_PLANE_IP
 ```
 
-### 6. Preparing the Control Plane Environment
+## 6. Set Up the Control Plane Software
+
+**Run on:** Control plane node (you're now SSH'd into the instance)
 
 Prepare the OS for Kubernetes by enabling required kernel features, installing `containerd`, and installing the Kubernetes tools.
 
----
-
-#### 6.1. Prerequisites: System Configuration
+## 6.1. Enable Essential Kernel Features
 
 Kubernetes requires specific kernel modules and network settings so the container runtime can handle bridged traffic.
-
-##### Load Kernel Modules
 
 Create a configuration file to load the necessary modules at boot and load them now:
 
@@ -171,8 +179,6 @@ sudo modprobe overlay
 sudo modprobe br_netfilter
 ```
 
-##### Configure Sysctl
-
 Enable IP forwarding and bridge networking. The sysctl command applies these changes immediately without requiring a reboot.
 
 ```bash
@@ -185,9 +191,7 @@ EOF
 sudo sysctl --system
 ```
 
----
-
-#### 6.2. Install containerd
+## 6.2. Install the Container Runtime
 
 Install `containerd` from the official Ubuntu repositories.
 
@@ -196,13 +200,9 @@ sudo apt update
 sudo apt install -y containerd
 ```
 
----
-
-#### 6.3. Configure containerd for Kubernetes
+## 6.3. Configure containerd for Kubernetes
 
 By default, `containerd` does not use the **systemd cgroup driver**, which Kubernetes recommends for stability. Update the config and restart the service.
-
-##### Generate Default Config
 
 Create the directory and generate a clean configuration file:
 
@@ -211,15 +211,11 @@ sudo mkdir -p /etc/containerd
 containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
 ```
 
-##### Enable Systemd Cgroup Driver
-
 Change `SystemdCgroup = false` to `true`.
 
 ```bash
 sudo sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
 ```
-
-##### Restart containerd
 
 Apply the new configuration:
 
@@ -228,9 +224,7 @@ sudo systemctl restart containerd
 sudo systemctl enable containerd
 ```
 
----
-
-#### 6.4. Install kubeadm, kubelet, and kubectl
+## 6.4. Install the Kubernetes Toolkit
 
 Add the Kubernetes package repository and install the components. The packages are held to prevent unintended upgrades.
 
@@ -249,7 +243,9 @@ sudo apt-mark hold kubelet kubeadm kubectl
 sudo systemctl enable --now kubelet
 ```
 
-### 7. Bootstrapping the Kubernetes Control Plane
+## 7. Bring the Control Plane to Life
+
+**Run on:** Control plane node
 
 Initialize the control plane with the chosen pod network CIDR.
 
@@ -267,15 +263,11 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 The initialization output includes a join token for worker nodes. You can save it, or generate a fresh one later.
 
-#### Deploy the Pod Network Plugin
-
 Deploy Flannel as the CNI plugin to enable pod-to-pod networking.
 
 ```bash
 kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 ```
-
-#### Enhance Your Command-Line Experience
 
 Enable kubectl auto-completion for the current session and persist it in your bash profile.
 
@@ -291,7 +283,9 @@ alias k=kubectl
 complete -o default -F __start_kubectl k
 ```
 
-### 8. Adding a Worker Node
+## 8. Provision Your First Worker Node
+
+**Run on:** Your local machine (open a new terminal, keep control plane SSH session active)
 
 Provision a worker node instance, wait for it to be running, and capture its public IP.
 
@@ -316,7 +310,9 @@ WORKER_IP=$(aws ec2 describe-instances \
 echo "Worker instance ready: $WORKER_IP"
 ```
 
-### 9. Connecting to the Worker Node
+## 9. Jump Into the Worker Node
+
+**Run on:** Your local machine
 
 Connect to the worker node using EC2 Instance Connect.
 
@@ -335,11 +331,15 @@ aws ec2-instance-connect send-ssh-public-key \
 ssh ubuntu@$WORKER_IP
 ```
 
-### 10. Preparing the Worker Node Environment
+## 10. Set Up the Worker Node Software
+
+**Run on:** Worker node (you're now SSH'd into the worker instance)
 
 Repeat the system configuration and installation steps from section 6 on the worker node (sections 6.1 through 6.4).
 
-### 11. Expanding Your Cluster
+## 11. Join the Worker to Your Cluster
+
+**Run on:** Control plane node (first command), then worker node (second command)
 
 Generate a fresh join command on the control plane, then run it on the worker node.
 
@@ -349,19 +349,17 @@ kubeadm token create --print-join-command
 
 This registers the worker node with the cluster.
 
-### 12. Testing Your Cluster with an Nginx Pod
+## 12. Take Your Cluster for a Test Drive
+
+**Run on:** Control plane node (kubectl commands) and your local machine (AWS commands)
 
 Verify the cluster by deploying a simple nginx pod, inspecting its status, and optionally exposing it.
-
-#### Create and Run an Nginx Pod
 
 Deploy an nginx pod to your cluster:
 
 ```bash
 kubectl run nginx-test --image=nginx:latest --port=80
 ```
-
-#### Verify the Pod is Running
 
 Check the status of your pod:
 
@@ -376,15 +374,11 @@ NAME         READY   STATUS    RESTARTS   AGE
 nginx-test   1/1     Running   0          30s
 ```
 
-#### Get Detailed Pod Information
-
 View details about the running pod:
 
 ```bash
 kubectl describe pod nginx-test
 ```
-
-#### Expose the Pod (Optional)
 
 If you want to access nginx from within the cluster, create a service:
 
@@ -398,11 +392,9 @@ Check the service and assigned port:
 kubectl get services nginx-test
 ```
 
-#### Access Nginx from Your Computer
-
 To access nginx from your local machine, open the NodePort range in the security group and get a node's public IP.
 
-Update your security group to allow traffic on the NodePort range (30000-32767):
+**Switch to your local machine terminal** and update your security group to allow traffic on the NodePort range (30000-32767):
 
 ```bash
 aws ec2 authorize-security-group-ingress \
@@ -421,7 +413,7 @@ aws ec2 describe-instances \
   --output table
 ```
 
-Note the `PublicIpAddress` from the output, then get the NodePort assigned to your service:
+Note the `PublicIpAddress` from the output, then **switch back to the control plane node** and get the NodePort assigned to your service:
 
 ```bash
 kubectl get service nginx-test -o jsonpath='{.spec.ports[0].nodePort}'
@@ -441,16 +433,14 @@ http://54.123.45.67:31234
 
 You should see the "Welcome to nginx!" page.
 
-#### Clean Up the Test Resources
-
-Remove the nginx pod and service when you're done testing:
+**On the control plane node**, remove the nginx pod and service when you're done testing:
 
 ```bash
 kubectl delete service nginx-test
 kubectl delete pod nginx-test
 ```
 
-If you created the NodePort security group rule, remove it as well:
+**On your local machine**, if you created the NodePort security group rule, remove it as well:
 
 ```bash
 aws ec2 revoke-security-group-ingress \
@@ -460,7 +450,9 @@ aws ec2 revoke-security-group-ingress \
   --cidr 0.0.0.0/0
 ```
 
-### 13. Cleaning Up Resources
+## 13. Tear Down Your Kubernetes Playground
+
+**Run on:** Your local machine
 
 Tear down resources in reverse order: terminate the EC2 instances, delete the security group, detach and delete the internet gateway, then remove the subnet and VPC.
 
@@ -491,7 +483,7 @@ aws ec2 delete-vpc \
 
 Before we wrap up, let's have an honest conversation: **this cluster is perfect for learning and testing, but it's not production-ready**. Think of this as your training ground—a safe space to experiment, break things, and learn!
 
-### Final Thoughts
+## Final Thoughts
 
 Congratulations on building your own Kubernetes cluster! You've gained hands-on experience with container orchestration that many developers never get. Use this setup to experiment, test your applications, and deepen your understanding of how Kubernetes really works.
 
